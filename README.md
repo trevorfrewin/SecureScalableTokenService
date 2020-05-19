@@ -9,7 +9,7 @@ A `Token` can be anything that is meaningful to the end user or the system(s) th
 A `Token` exists in only 1 `Store`.
 A `Token` may be copied.
 All copies of a `Token` are dated when the copy was made so it is possible to trace which is the source `Token`, assuming all Stores are searched.
-A copy of a `Token` may contain a trace ack to the originating `Token`, but this is not required.
+A copy of a `Token` may contain a trace back to the originating `Token`, but this is not required.
 ## What is a Token ``Store``?
 A logical container for `Token`s.
 A `Store` may be made up of several physical stores. 
