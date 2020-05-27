@@ -13,5 +13,8 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+- script: dotnet build --configuration $(buildConfiguration) SSTS.CommandApi/SSTS.CommandApi.csproj
+  displayName: 'dotnet build Command API for $(buildConfiguration)'
+
+- script: dotnet build --configuration $(buildConfiguration) SSTS.QueryApi/SSTS.QueryApi.csproj
+  displayName: 'dotnet build Query API for $(buildConfiguration)'
