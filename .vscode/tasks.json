@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SSTS.CommandApi/SSTS.CommandApi.csproj",
+                "${workspaceFolder}/SSTS.Api.Command/SSTS.Api.Command.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/SSTS.QueryApi/SSTS.QueryApi.csproj",
+                "${workspaceFolder}/SSTS.Api.Query/SSTS.Api.Query.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -31,7 +31,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/SSTS.CommandApi/SSTS.CommandApi.csproj",
+                "${workspaceFolder}/SSTS.Api.Command/SSTS.Api.Command.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -44,7 +44,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/SSTS.CommandApi/SSTS.CommandApi.csproj",
+                "${workspaceFolder}/SSTS.Api.Command/SSTS.Api.Command.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
