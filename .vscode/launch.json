@@ -6,9 +6,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-CommandAPI",
-            "program": "${workspaceFolder}/SSTS.CommandApi/bin/Debug/netcoreapp3.1/SSTS.CommandApi.dll",
+            "program": "${workspaceFolder}/SSTS.Api.Command/bin/Debug/netcoreapp3.1/SSTS.Api.Command.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SSTS.CommandApi",
+            "cwd": "${workspaceFolder}/SSTS.Api.Command",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -26,9 +26,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build-QueryAPI",
-            "program": "${workspaceFolder}/SSTS.QueryApi/bin/Debug/netcoreapp3.1/SSTS.QueryApi.dll",
+            "program": "${workspaceFolder}/SSTS.Api.Query/bin/Debug/netcoreapp3.1/SSTS.Api.Query.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/SSTS.QueryApi",
+            "cwd": "${workspaceFolder}/SSTS.Api.Query",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",

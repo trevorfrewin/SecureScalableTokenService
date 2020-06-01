@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace SSTS.CommandApi
+namespace SSTS.Api.Command
 {
     public class Startup
     {

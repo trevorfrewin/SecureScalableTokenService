@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace SSTS.CommandApi
+namespace SSTS.Api.Query
 {
     public class Program
     {

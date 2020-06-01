@@ -1,4 +1,4 @@
-SSTS.CommandApi/obj/**
-SSTS.CommandApi/bin/**
-SSTS.QueryApi/obj/**
-SSTS.QueryApi/bin/**
+SSTS.Api.Command/obj/**
+SSTS.Api.Command/bin/**
+SSTS.Api.Query/obj/**
+SSTS.Api.Query/bin/**
