@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using SSTS.Library.ConfigurationManagement;
 
 namespace SSTS.Api.Query.Controllers
 {
@@ -10,6 +8,13 @@ namespace SSTS.Api.Query.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        public IConfigurationManagementSource ConfigurationManagementSource { get; private set;}
+
+        public ValuesController(IConfigurationManagementSource configurationManagementSource)
+        {
+            this.ConfigurationManagementSource = configurationManagementSource;
+        }
+        
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
