@@ -2,3 +2,5 @@ SSTS.Api.Command/obj/**
 SSTS.Api.Command/bin/**
 SSTS.Api.Query/obj/**
 SSTS.Api.Query/bin/**
+SSTS.Library.ConfigurationManagement/obj/**
+SSTS.Library.ConfigurationManagement/bin/**
