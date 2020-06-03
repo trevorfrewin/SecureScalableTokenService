@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SSTS.Library.Common.Connectivity;
 using SSTS.Library.ConfigurationManagement;
 
 namespace SSTS.Api.Query
@@ -21,6 +23,7 @@ namespace SSTS.Api.Query
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IConfigurationManagementSource, ConfigurationManagementSource>();
+            services.AddScoped<IEnumerable<IDatabaseConnectionSet>>(f => { return new DatabaseConnectionLoader().FromAppSettings(Configuration.GetSection("DatabaseConnectionSet")); });
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 

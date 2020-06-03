@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SSTS.Library.ConfigurationManagement\SSTS.Library.ConfigurationManagement.csproj" />
+    <ProjectReference Include="..\SSTS.Library.Common\SSTS.Library.Common.csproj" />
   </ItemGroup>
 
 </Project>
