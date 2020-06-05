@@ -19,7 +19,8 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) SSTS.Api.Query/SSTS.Api.Query.csproj
   displayName: 'dotnet build Query API for $(buildConfiguration)'
 
-- task: unit tests
-  command: test
-  projects: '**/*.Test/*.csproj'
-  arguments: '--configuration $(buildConfiguration)'
+- task: unit tests
+  inputs:
+    command: test
+    projects: '**/*.Test/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
