@@ -1,6 +1,6 @@
 using System;
 
-namespace SSTS.Library.Common.Connectivity
+namespace SSTS.Library.Common.Data
 {
     public class DatabaseConnection : IDatabaseConnection
     {

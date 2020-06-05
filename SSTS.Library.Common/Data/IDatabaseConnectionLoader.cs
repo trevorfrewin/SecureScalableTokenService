@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
-namespace SSTS.Library.Common.Connectivity
+namespace SSTS.Library.Common.Data
 {
     public interface IDatabaseConnectionLoader
     {

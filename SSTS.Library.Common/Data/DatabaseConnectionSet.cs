@@ -1,4 +1,4 @@
-namespace SSTS.Library.Common.Connectivity
+namespace SSTS.Library.Common.Data
 {
     public class DatabaseConnectionSet : IDatabaseConnectionSet
     {
