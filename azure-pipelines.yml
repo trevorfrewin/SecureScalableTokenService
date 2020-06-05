@@ -20,7 +20,6 @@ steps:
   displayName: 'dotnet build Query API for $(buildConfiguration)'
 
 - task: unit tests
-  inputs:
   command: test
   projects: '**/*.Test/*.csproj'
   arguments: '--configuration $(buildConfiguration)'

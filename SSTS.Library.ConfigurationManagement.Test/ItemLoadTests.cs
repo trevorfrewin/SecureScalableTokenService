@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using SSTS.Library.Common.Data;
 
-
 // HINT: to enable debug attachments in VSCode - export VSTEST_HOST_DEBUG=1
 namespace SSTS.Library.ConfigurationManagement.Test
 {
