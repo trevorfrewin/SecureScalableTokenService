@@ -1,52 +1,69 @@
-using MongoDB.Driver;
-using SSTS.Library.Common.Connectivity;
+using SSTS.Library.Common.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Options;
 
 namespace SSTS.Library.ConfigurationManagement
 {
     public class ConfigurationManagementSource : IConfigurationManagementSource
     {
-        private Dictionary<string, dynamic> ConfigurationUnderManagement;
+        private Dictionary<string, Tuple<DateTime, dynamic>> ConfigurationUnderManagement;
+
+        private ConfigurationManagementSettings BaseSettings;
 
         public string DatabaseConnectionSetName { get { return "ConfigurationManagement"; } }
 
-        public IEnumerable<IDatabaseConnectionSet> DatabaseConnectionSets { get; private set; }
+        public IDatabaseConnectionSet DatabaseConnectionSet { get; private set; }
 
-        public ConfigurationManagementSource(IEnumerable<IDatabaseConnectionSet> databaseConnectionSets)
+        public IDatabaseReader DatabaseReader { get; private set; }
+
+        public ConfigurationManagementSource(IEnumerable<IDatabaseConnectionSet> databaseConnectionSets, IDatabaseReader databaseReader)
         {
-            this.DatabaseConnectionSets = databaseConnectionSets;
+            this.DatabaseReader = databaseReader;
 
-            if(!databaseConnectionSets.Any(dcs => this.DatabaseConnectionSetName.Equals(dcs.Name)))
+            if (!databaseConnectionSets.Any(dcs => this.DatabaseConnectionSetName.Equals(dcs.Name)))
             {
                 throw new TypeLoadException(string.Format("Configuration missing for database connection named '{0}'", this.DatabaseConnectionSetName));
             }
 
-            var databaseConnectionSet = this.DatabaseConnectionSets.First<IDatabaseConnectionSet>(dcs => dcs.Name.Equals(this.DatabaseConnectionSetName));
-            var client = new MongoClient(databaseConnectionSet.Connection.ConnectionString);
-            var database = client.GetDatabase(databaseConnectionSet.Connection.DatabaseName);
-            var collection = database.GetCollection<dynamic>(databaseConnectionSet.Connection.CollectionName);
-
-            var configurationManagement = new Dictionary<string, dynamic>();
-
-            foreach(var documentFromCollection in collection.AsQueryable())
-            {
-                configurationManagement.Add(documentFromCollection.name, documentFromCollection.configuration);
-            }
-
-            this.ConfigurationUnderManagement = configurationManagement;
+            this.DatabaseConnectionSet = databaseConnectionSets.First<IDatabaseConnectionSet>(dcs => dcs.Name.Equals(this.DatabaseConnectionSetName));
         }
 
         public dynamic Load(string typeName)
         {
-            if (!this.ConfigurationUnderManagement.ContainsKey(typeName))
+            if (this.ConfigurationUnderManagement == null)
             {
-                throw new ArgumentException(string.Format("No Configuration for '{0}' found", typeName));
+                this.ConfigurationUnderManagement = new Dictionary<string, Tuple<DateTime, dynamic>>();
             }
 
-            return this.ConfigurationUnderManagement[typeName];
+            if (this.BaseSettings == null)
+            {
+                var baseSettingsAsLoaded = this.DatabaseReader.Read(this.DatabaseConnectionSet.Connection, new Dictionary<string, object> { { "name", "SSTS.Base" } });
+
+                this.BaseSettings = new ConfigurationManagementSettings(baseSettingsAsLoaded.configuration.maximumConfigurationAgeInMilliseconds);
+            }
+
+            if (!this.ConfigurationUnderManagement.ContainsKey(typeName) ||
+                 this.ConfigurationUnderManagement[typeName].Item1 < DateTime.UtcNow.AddMilliseconds(this.BaseSettings.MaximumConfigurationAgeInMilliseconds * -1))
+            {
+                var document = this.DatabaseReader.Read(this.DatabaseConnectionSet.Connection, new Dictionary<string, object> { { "name", typeName } });
+
+                if (document == null)
+                {
+                    throw new ArgumentException(string.Format("No Configuration for '{0}' found", typeName));
+                }
+
+                if (this.ConfigurationUnderManagement.ContainsKey(typeName))
+                {
+                    this.ConfigurationUnderManagement.Remove(typeName);
+                }
+
+                this.ConfigurationUnderManagement.Add(typeName, new Tuple<DateTime, dynamic>(DateTime.UtcNow, document));
+
+                return document;
+            }
+
+            return this.ConfigurationUnderManagement[typeName].Item2;
         }
     }
 }

@@ -19,6 +19,9 @@ namespace SSTS.Api.Query.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var configurationManagement = this.ConfigurationManagementSource.Load("SSTS.First.One");
+            var reload = this.ConfigurationManagementSource.Load("SSTS.First.One");
+
             return new string[] { "value1", "value2" };
         }
 
