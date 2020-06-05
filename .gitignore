@@ -6,5 +6,7 @@ SSTS.Library.Common/obj/**
 SSTS.Library.Common/bin/**
 SSTS.Library.ConfigurationManagement/obj/**
 SSTS.Library.ConfigurationManagement/bin/**
+SSTS.Library.ConfigurationManagement.Test/obj/**
+SSTS.Library.ConfigurationManagement.Test/bin/**
 SSTS.Library.Mongo/obj/**
 SSTS.Library.Mongo/bin/**
