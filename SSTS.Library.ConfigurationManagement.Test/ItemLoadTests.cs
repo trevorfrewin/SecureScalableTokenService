@@ -27,7 +27,7 @@ namespace SSTS.Library.ConfigurationManagement.Test
             dynamic baseConfiguration = new ExpandoObject();
             baseConfiguration.name = "SSTS.Base";
             baseConfiguration.configuration = new ExpandoObject();
-            baseConfiguration.configuration.maximumConfigurationAgeInMilliseconds = 500;
+            baseConfiguration.configuration.maximumConfigurationAgeInMilliseconds = maximumAgeForConfigurationManagementInUnitTest;
             databaseReaderMock.Setup(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.Base" } })).Returns(baseConfiguration);
             databaseReaderMock.Setup(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.ItemUnderTest" } })).Returns(new { name = "SSTS.Base", configuration = new { somethingElseEntirely = "not relevant for test" } });
             var sut = new ConfigurationManagementSource(databaseConnectionSets, databaseReaderMock.Object);
