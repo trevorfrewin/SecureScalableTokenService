@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SSTS.Library.ConfigurationManagement;
 
 namespace SSTS.Api.Command.Controllers
@@ -8,17 +10,23 @@ namespace SSTS.Api.Command.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        public IConfigurationManagementSource ConfigurationManagementSource { get; private set;}
+        public IConfigurationManagementSource ConfigurationManagementSource { get; private set; }
 
-        public ValuesController(IConfigurationManagementSource configurationManagementSource)
+        public ILogger<ValuesController> Logger { get; private set; }
+
+        public ValuesController(IConfigurationManagementSource configurationManagementSource, ILogger<ValuesController> logger)
         {
             this.ConfigurationManagementSource = configurationManagementSource;
+            this.Logger = logger;
         }
 
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            var innerException = new NullReferenceException("FieldNameDodgy");
+            this.Logger.LogError(new ArgumentException("fake exception", innerException), "Extra detail");
+
             var configurationManagement = this.ConfigurationManagementSource.Load("SSTS.First.One");
             var reload = this.ConfigurationManagementSource.Load("SSTS.First.One");
             return new string[] { "value1", "value2" };

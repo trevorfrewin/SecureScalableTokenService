@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SSTS.Library.Common.Data;
+using SSTS.Library.Common.Logging;
 using SSTS.Library.ConfigurationManagement;
 using SSTS.Library.Mongo;
 
@@ -23,9 +25,16 @@ namespace SSTS.Api.Command
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IEnumerable<IDatabaseConnectionSet> databaseConnectionSets = new DatabaseConnectionLoader().FromAppSettings(Configuration.GetSection("DatabaseConnectionSet"));
+            services.AddSingleton<IEnumerable<IDatabaseConnectionSet>>(databaseConnectionSets);
+            services.AddScoped<IDatabaseAccessFactory, MongoDatabaseAccessFactory>();
             services.AddScoped<IConfigurationManagementSource, ConfigurationManagementSource>();
-            services.AddScoped<IEnumerable<IDatabaseConnectionSet>>(f => { return new DatabaseConnectionLoader().FromAppSettings(Configuration.GetSection("DatabaseConnectionSet")); });
-            services.AddScoped<IDatabaseReader, DatabaseReader>();
+
+            services.AddLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.AddProvider(new DocumentLoggerProvider(new MongoDatabaseAccessFactory(databaseConnectionSets)));
+                });
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 

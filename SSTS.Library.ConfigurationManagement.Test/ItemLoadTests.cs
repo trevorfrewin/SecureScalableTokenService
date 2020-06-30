@@ -20,17 +20,19 @@ namespace SSTS.Library.ConfigurationManagement.Test
         {
             // Arrange
             var maximumAgeForConfigurationManagementInUnitTest = 500; // milliseconds
-            var databaseConnection = new DatabaseConnection { ConnectionString = "ConnectionString", DatabaseName = "DatabaseName", CollectionName = "CollectionName" };
-            var databaseConnectionSets = new List<DatabaseConnectionSet> { new DatabaseConnectionSet { Name = "ConfigurationManagement", Connection = databaseConnection } };
-            var databaseReaderMock = new Mock<IDatabaseReader>();
-
             dynamic baseConfiguration = new ExpandoObject();
             baseConfiguration.name = "SSTS.Base";
             baseConfiguration.configuration = new ExpandoObject();
             baseConfiguration.configuration.maximumConfigurationAgeInMilliseconds = maximumAgeForConfigurationManagementInUnitTest;
-            databaseReaderMock.Setup(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.Base" } })).Returns(baseConfiguration);
-            databaseReaderMock.Setup(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.ItemUnderTest" } })).Returns(new { name = "SSTS.Base", configuration = new { somethingElseEntirely = "not relevant for test" } });
-            var sut = new ConfigurationManagementSource(databaseConnectionSets, databaseReaderMock.Object);
+
+            var databaseReaderMock = new Mock<IDatabaseReader>();
+            databaseReaderMock.Setup(dr => dr.Read(new Dictionary<string, object> { { "name", "SSTS.Base" } })).Returns(baseConfiguration);
+            databaseReaderMock.Setup(dr => dr.Read(new Dictionary<string, object> { { "name", "SSTS.ItemUnderTest" } })).Returns(new { name = "SSTS.Base", configuration = new { somethingElseEntirely = "not relevant for test" } });
+
+            var databaseAccessFactoryMock = new Mock<IDatabaseAccessFactory>();
+            databaseAccessFactoryMock.Setup(daf => daf.GetReader("ConfigurationManagement")).Returns(databaseReaderMock.Object);
+
+            var sut = new ConfigurationManagementSource(databaseAccessFactoryMock.Object);
 
             // Act
             sut.Load("SSTS.ItemUnderTest");
@@ -41,8 +43,8 @@ namespace SSTS.Library.ConfigurationManagement.Test
             sut.Load("SSTS.ItemUnderTest");
 
             // Assert
-            databaseReaderMock.Verify(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.Base" } }), Times.Exactly(1));
-            databaseReaderMock.Verify(dr => dr.Read(databaseConnection, new Dictionary<string, object> { { "name", "SSTS.ItemUnderTest" } }), Times.Exactly(2));
+            databaseReaderMock.Verify(dr => dr.Read(new Dictionary<string, object> { { "name", "SSTS.Base" } }), Times.Exactly(1));
+            databaseReaderMock.Verify(dr => dr.Read(new Dictionary<string, object> { { "name", "SSTS.ItemUnderTest" } }), Times.Exactly(2));
         }
     }
 }

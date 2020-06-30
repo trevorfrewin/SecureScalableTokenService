@@ -1,7 +1,6 @@
 using SSTS.Library.Common.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SSTS.Library.ConfigurationManagement
 {
@@ -13,20 +12,11 @@ namespace SSTS.Library.ConfigurationManagement
 
         public string DatabaseConnectionSetName { get { return "ConfigurationManagement"; } }
 
-        public IDatabaseConnectionSet DatabaseConnectionSet { get; private set; }
+        public IDatabaseAccessFactory DatabaseAccessFactory { get; private set; }
 
-        public IDatabaseReader DatabaseReader { get; private set; }
-
-        public ConfigurationManagementSource(IEnumerable<IDatabaseConnectionSet> databaseConnectionSets, IDatabaseReader databaseReader)
+        public ConfigurationManagementSource(IDatabaseAccessFactory databaseAccessFactory)
         {
-            this.DatabaseReader = databaseReader;
-
-            if (!databaseConnectionSets.Any(dcs => this.DatabaseConnectionSetName.Equals(dcs.Name)))
-            {
-                throw new TypeLoadException(string.Format("Configuration missing for database connection named '{0}'", this.DatabaseConnectionSetName));
-            }
-
-            this.DatabaseConnectionSet = databaseConnectionSets.First<IDatabaseConnectionSet>(dcs => dcs.Name.Equals(this.DatabaseConnectionSetName));
+            this.DatabaseAccessFactory = databaseAccessFactory;
         }
 
         public dynamic Load(string typeName)
@@ -38,7 +28,8 @@ namespace SSTS.Library.ConfigurationManagement
 
             if (this.BaseSettings == null)
             {
-                var baseSettingsAsLoaded = this.DatabaseReader.Read(this.DatabaseConnectionSet.Connection, new Dictionary<string, object> { { "name", "SSTS.Base" } });
+                var databaseReader = this.DatabaseAccessFactory.GetReader("ConfigurationManagement");
+                var baseSettingsAsLoaded = databaseReader.Read(new Dictionary<string, object> { { "name", "SSTS.Base" } });
 
                 this.BaseSettings = new ConfigurationManagementSettings(baseSettingsAsLoaded.configuration.maximumConfigurationAgeInMilliseconds);
             }
@@ -46,7 +37,8 @@ namespace SSTS.Library.ConfigurationManagement
             if (!this.ConfigurationUnderManagement.ContainsKey(typeName) ||
                  this.ConfigurationUnderManagement[typeName].Item1 < DateTime.UtcNow.AddMilliseconds(this.BaseSettings.MaximumConfigurationAgeInMilliseconds * -1))
             {
-                var document = this.DatabaseReader.Read(this.DatabaseConnectionSet.Connection, new Dictionary<string, object> { { "name", typeName } });
+                var databaseReader = this.DatabaseAccessFactory.GetReader("ConfigurationManagement");
+                var document = databaseReader.Read(new Dictionary<string, object> { { "name", typeName } });
 
                 if (document == null)
                 {
