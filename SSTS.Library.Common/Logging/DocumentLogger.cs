@@ -6,7 +6,7 @@ using SSTS.Library.Common.Data;
 
 namespace SSTS.Library.Common.Logging
 {
-    public class DocumentLogger : ILogger
+    public partial class DocumentLogger : ILogger
     {
         public class DocumentLoggerState : IDisposable
         {
@@ -29,37 +29,6 @@ namespace SSTS.Library.Common.Logging
             }
         }
 
-        public interface IEntry
-        {
-
-        }
-
-        public class LogEntry : IEntry
-        {
-            public EventId EventId { get; set; }
-
-            public string Category { get; set; }
-
-            public LogLevel LogLevel { get; set; }
-
-            public DateTime CreatedDateTime { get; set; }
-
-            public string Message { get; set; }
-        }
-
-        public class ExceptionEntry : IEntry
-        {
-            public EventId EventId { get; set; }
-
-            public string Category { get; set; }
-
-            public LogLevel LogLevel { get; set; }
-
-            public DateTime CreatedDateTime { get; set; }
-
-            public string Exception { get; set; }
-        }
-
         private IDatabaseWriter DatabaseWriter { get; set; }
 
         public string Category { get; private set; }
@@ -77,7 +46,7 @@ namespace SSTS.Library.Common.Logging
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            IEntry document;
+            ILogEntry document;
 
             if (exception == null)
             {
