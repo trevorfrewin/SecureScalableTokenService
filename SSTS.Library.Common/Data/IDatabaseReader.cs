@@ -4,6 +4,6 @@ namespace SSTS.Library.Common.Data
 {
     public interface IDatabaseReader
     {
-        dynamic Read(IDatabaseConnection connection, Dictionary<string, object> filter);
+        dynamic Read(Dictionary<string, object> filter);
     }
 }

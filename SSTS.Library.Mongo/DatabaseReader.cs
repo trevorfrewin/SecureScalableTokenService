@@ -7,13 +7,20 @@ namespace SSTS.Library.Mongo
 {
     public class DatabaseReader : IDatabaseReader
     {
-        public dynamic Read(IDatabaseConnection connection, Dictionary<string, object> filter)
+        public IDatabaseConnection DatabaseConnection { get; private set; }
+
+        public DatabaseReader(IDatabaseConnection databaseConnection)
+        {
+            this.DatabaseConnection = databaseConnection;
+        }
+
+        public dynamic Read(Dictionary<string, object> filter)
         {
             var filterBSON = new BsonDocument(filter);
 
-            var client = new MongoClient(connection.ConnectionString);
-            var database = client.GetDatabase(connection.DatabaseName);
-            var collection = database.GetCollection<dynamic>(connection.CollectionName);
+            var client = new MongoClient(this.DatabaseConnection.ConnectionString);
+            var database = client.GetDatabase(this.DatabaseConnection.DatabaseName);
+            var collection = database.GetCollection<dynamic>(this.DatabaseConnection.CollectionName);
 
             return collection.FindSync(filterBSON).FirstOrDefault();
         }
