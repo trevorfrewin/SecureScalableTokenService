@@ -24,12 +24,18 @@ namespace SSTS.Api.Command.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var innerException = new NullReferenceException("FieldNameDodgy");
-            this.Logger.LogError(new ArgumentException("fake exception", innerException), "Extra detail");
+            var scope = Request.HttpContext.TraceIdentifier;
+            using (this.Logger.BeginScope(scope))
+            {
+                this.Logger.LogWarning("[Scope:{0}] Some details of the Warning that is being logged", scope);
 
-            var configurationManagement = this.ConfigurationManagementSource.Load("SSTS.First.One");
-            var reload = this.ConfigurationManagementSource.Load("SSTS.First.One");
-            return new string[] { "value1", "value2" };
+                var innerException = new NullReferenceException("FieldNameDodgy");
+                this.Logger.LogError(new ArgumentException("fake exception", innerException), "[Scope:{0}] Extra detail", scope);
+
+                var configurationManagement = this.ConfigurationManagementSource.Load("SSTS.First.One");
+                var reload = this.ConfigurationManagementSource.Load("SSTS.First.One");
+                return new string[] { "value1", "value2" };
+            }
         }
 
         // GET api/values/5

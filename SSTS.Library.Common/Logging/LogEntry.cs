@@ -9,6 +9,8 @@ namespace SSTS.Library.Common.Logging
         {
             public EventId EventId { get; set; }
 
+            public string MachineName { get; set; }
+
             public string Category { get; set; }
 
             public LogLevel LogLevel { get; set; }

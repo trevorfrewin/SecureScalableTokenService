@@ -53,6 +53,7 @@ namespace SSTS.Library.Common.Logging
                 document = new LogEntry()
                 {
                     EventId = eventId,
+                    MachineName = Environment.MachineName,
                     Category = this.Category,
                     LogLevel = logLevel,
                     CreatedDateTime = DateTime.UtcNow,
@@ -73,12 +74,14 @@ namespace SSTS.Library.Common.Logging
                     innerException = innerException.InnerException;
                 }
 
-                document = new ExceptionEntry()
+                document = new ExceptionLogEntry()
                 {
                     EventId = eventId,
+                    MachineName = Environment.MachineName,
                     Category = this.Category,
                     LogLevel = logLevel,
                     CreatedDateTime = DateTime.UtcNow,
+                    Message = formatter(state, exception),
                     Exception = formattedException.ToString()
                 };
             }
