@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
 namespace SSTS.Library.Common.Data
 {
     public class DatabaseConnectionLoader : IDatabaseConnectionLoader
     {
-        public IConfiguration Configuration { get; private set; }
+        public IConfiguration? Configuration { get; private set; }
         
         public IEnumerable<IDatabaseConnectionSet> FromAppSettings(IConfigurationSection baseSection)
         {
