@@ -1,4 +1,3 @@
-using System;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -44,7 +43,7 @@ namespace SSTS.Library.Common.Logging
             return true;
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        void ILogger.Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             ILogEntry document;
 
@@ -89,7 +88,7 @@ namespace SSTS.Library.Common.Logging
             this.DatabaseWriter.Write(document);
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        IDisposable ILogger.BeginScope<TState>(TState state)
         {
             return new DocumentLoggerState(this, state);
         }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SSTS.Library.ConfigurationManagement
+﻿namespace SSTS.Library.ConfigurationManagement
 {
     public interface IConfigurationManagementSource
     {

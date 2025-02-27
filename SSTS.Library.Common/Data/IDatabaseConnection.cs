@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SSTS.Library.Common.Data
+﻿namespace SSTS.Library.Common.Data
 {
     public interface IDatabaseConnection
     {

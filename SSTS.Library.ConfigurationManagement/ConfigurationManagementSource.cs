@@ -1,6 +1,4 @@
 using SSTS.Library.Common.Data;
-using System;
-using System.Collections.Generic;
 
 namespace SSTS.Library.ConfigurationManagement
 {
@@ -17,23 +15,15 @@ namespace SSTS.Library.ConfigurationManagement
         public ConfigurationManagementSource(IDatabaseAccessFactory databaseAccessFactory)
         {
             this.DatabaseAccessFactory = databaseAccessFactory;
+            this.ConfigurationUnderManagement = new Dictionary<string, Tuple<DateTime, dynamic>>();
+
+            var databaseReader = this.DatabaseAccessFactory.GetReader("ConfigurationManagement");
+            var baseSettingsAsLoaded = databaseReader.Read(new Dictionary<string, object> { { "name", "SSTS.Base" } });
+            this.BaseSettings = new ConfigurationManagementSettings(baseSettingsAsLoaded.configuration.maximumConfigurationAgeInMilliseconds);
         }
 
         public dynamic Load(string typeName)
         {
-            if (this.ConfigurationUnderManagement == null)
-            {
-                this.ConfigurationUnderManagement = new Dictionary<string, Tuple<DateTime, dynamic>>();
-            }
-
-            if (this.BaseSettings == null)
-            {
-                var databaseReader = this.DatabaseAccessFactory.GetReader("ConfigurationManagement");
-                var baseSettingsAsLoaded = databaseReader.Read(new Dictionary<string, object> { { "name", "SSTS.Base" } });
-
-                this.BaseSettings = new ConfigurationManagementSettings(baseSettingsAsLoaded.configuration.maximumConfigurationAgeInMilliseconds);
-            }
-
             if (!this.ConfigurationUnderManagement.ContainsKey(typeName) ||
                  this.ConfigurationUnderManagement[typeName].Item1 < DateTime.UtcNow.AddMilliseconds(this.BaseSettings.MaximumConfigurationAgeInMilliseconds * -1))
             {

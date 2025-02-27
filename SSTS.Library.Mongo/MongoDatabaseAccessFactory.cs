@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using SSTS.Library.Common.Data;
+﻿using SSTS.Library.Common.Data;
 
 namespace SSTS.Library.Mongo
 {
@@ -31,7 +28,7 @@ namespace SSTS.Library.Mongo
                 throw new ArgumentException(string.Format("No database connection set found in configuration with the name: '{0}'.", connectionSetName));
             }
 
-            return this.DatabaseConnectionSets.FirstOrDefault(dcs => dcs.Name.Equals(connectionSetName));
+            return this.DatabaseConnectionSets.First(dcs => dcs.Name.Equals(connectionSetName));
         }
     }
 }

@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SSTS.Library.Common.Data;
+﻿using SSTS.Library.Common.Data;
 using SSTS.Library.ConfigurationManagement;
 using SSTS.Library.Mongo;
 
@@ -26,7 +19,7 @@ namespace SSTS.Api.Query
             services.AddScoped<IConfigurationManagementSource, ConfigurationManagementSource>();
             services.AddScoped<IEnumerable<IDatabaseConnectionSet>>(f => { return new DatabaseConnectionLoader().FromAppSettings(Configuration.GetSection("DatabaseConnectionSet")); });
             services.AddScoped<IDatabaseReader, DatabaseReader>();
-            services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
